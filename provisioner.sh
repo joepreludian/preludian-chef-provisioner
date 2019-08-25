@@ -54,7 +54,6 @@ echo "Verifying needed files..."
 if [ -f "${COOKBOOKS_FILENAME}" ]; then echo "${COOKBOOKS_FILENAME} exists."; else echo "${COOKBOOKS_FILENAME} not found. Please provide this file and then run this tool again"; exit 1; fi
 if [ -f "${NODEJSON_FILENAME}" ]; then echo "${NODEJSON_FILENAME} exists."; else echo "${NODEJSON_FILENAME} not found. Please provide this file and then run this tool again"; exit 1; fi
 echo "Files verified. Proceeding to instance setup through SSH";
-exit 1;
 
 # Script begin
 echo "Installing Chef OMNIBUS on target...";
