@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='0.2.0';
+VERSION='0.3.0';
 
 echo -e "Preludian SSH Provisioner [${VERSION}]";
 
@@ -22,7 +22,7 @@ function credentials_delete {
 function display_help {
   echo -e "  How to use it?\n    $0 <address_of_your_machine> <root_password_of_your_instance>\n";
   echo -e "  Advanced usage:\n    you can also set some environment variables like:\n";
-  echo -e "      CHEF_CLIENT_VERSION=\"${CHEF_CLIENT_VERSION}\" - more information about omnibus: https://docs.chef.io/install_omnibus.html\n      COOKBOOKS_FILENAME=\"${COOKBOOKS_FILENAME}\"\n      NODEJSON_FILENAME=\"${NODEJSON_FILENAME}\"";
+  echo -e "      CHEF_CLIENT_VERSION=\"${CHEF_CLIENT_VERSION}\" - more information about omnibus: https://docs.chef.io/install_omnibus.html\n      COOKBOOKS_FILENAME=\"${COOKBOOKS_FILENAME}\"\n      NODEJSON_FILENAME=\"${NODEJSON_FILENAME}\"\n      RESTART_NODE=${RESTART_NODE} - Restart node after a sucessful chef command";
   echo;
   exit 1;
 }
@@ -43,6 +43,7 @@ function run_scp {  # usage run_scp <from> <to>;
 if [ -z "$CHEF_CLIENT_VERSION" ]; then CHEF_CLIENT_VERSION='15.2.20'; fi
 if [ -z "$COOKBOOKS_FILENAME" ]; then COOKBOOKS_FILENAME='cookbooks.tar.gz'; fi
 if [ -z "$NODEJSON_FILENAME" ]; then NODEJSON_FILENAME='node.json'; fi
+if [ -z "$RESTART_NODE" ]; then RESTART_NODE='no'; fi
 
 # Mandatory params
 ADDRESS=$1; if [ -z "$ADDRESS" ]; then display_help; fi
@@ -68,5 +69,7 @@ run_scp $NODEJSON_FILENAME '/chef/';
 
 echo "Deploying project...";
 run_ssh "cd /chef/ && tar zxvf ${COOKBOOKS_FILENAME} && chef-client --chef-license accept-silent -z -j ${NODEJSON_FILENAME}";
+
+if [ "${RESTART_NODE}" = "yes" ]; then echo "Sending a restart command to node..."; run_ssh 'restart && exit'; fi
 
 echo "Done!";
