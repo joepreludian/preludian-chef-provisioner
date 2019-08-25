@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='0.3.0';
+VERSION='0.3.1';
 
 echo -e "Preludian SSH Provisioner [${VERSION}]";
 
@@ -28,7 +28,7 @@ function display_help {
 }
 
 function run_ssh {  # usage run_ssh <command>;
-  setsid ssh -oStrictHostKeyChecking=no root@${ADDRESS} '$1';
+  setsid ssh -oStrictHostKeyChecking=no root@${ADDRESS} "$1";
 
   if [ $? -ne 0 ]; then echo "Command Failed."; credentials_delete; exit 1; fi
 }
@@ -54,6 +54,8 @@ echo "Verifying needed files..."
 if [ -f "${COOKBOOKS_FILENAME}" ]; then echo "${COOKBOOKS_FILENAME} exists."; else echo "${COOKBOOKS_FILENAME} not found. Please provide this file and then run this tool again"; exit 1; fi
 if [ -f "${NODEJSON_FILENAME}" ]; then echo "${NODEJSON_FILENAME} exists."; else echo "${NODEJSON_FILENAME} not found. Please provide this file and then run this tool again"; exit 1; fi
 echo "Files verified. Proceeding to instance setup through SSH";
+
+credentials_create;
 
 # Script begin
 echo "Installing Chef OMNIBUS on target...";

@@ -1,3 +1,6 @@
+# 0.3.1
+- Bugfixes
+
 # 0.3.0
 - Add the Ability to restart a node if the chef command has been executed sucessfully;
 
